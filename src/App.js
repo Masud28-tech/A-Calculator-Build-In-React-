@@ -11,70 +11,43 @@ class Calculator extends React.Component {
       <div id="calculator">
         {/* Display component */}
         <div id="display">
-          <button id="clear" className="btn">
-            Clear
-          </button>
-          <div className="screen"></div>
+          <button className="btn" id="clear">Clear</button>
+          <div className="screen">1234.4</div>
         </div>
         {/* Inputs component */}
         <div id="input-container">
-          <section className="actions">
-            <button id="equals" className="btn">
-              =
-            </button>
-          </section>
-          <section className="numbers">
-            <button id="zero" className="btn">
-              0
-            </button>
-            <button id="one" className="btn">
-              1
-            </button>
-            <button id="two" className="btn">
-              2
-            </button>
-            <button id="three" className="btn">
-              3
-            </button>
-            <button id="four" className="btn">
-              4
-            </button>
-            <button id="five" className="btn">
-              5
-            </button>
-            <button id="six" className="btn">
-              6
-            </button>
-            <button id="seven" className="btn">
-              7
-            </button>
-            <button id="eight" className="btn">
-              8
-            </button>
-            <button id="nine" className="btn">
-              9
-            </button>
-            <button id="decimal" className="btn">
-              .
-            </button>
-          </section>
-          <section className="operators">
-            <button id="add" className="btn">
-              +
-            </button>
-            <button id="subtract" className="btn">
-              -
-            </button>
-            <button id="multiply" className="btn">
-              *
-            </button>
-            <button id="divide" className="btn">
-              /
-            </button>
-          </section>
+          <button className="btn" id="seven">7</button>
+          <button className="btn" id="eight">8</button>
+          <button className="btn" id="nine">9</button>
+          <button className="btn operator" id="add">
+            +
+          </button>
+          <button className="btn" id="four">4</button>
+          <button className="btn" id="five">5</button>
+          <button className="btn" id="six">6</button>
+          <button className="btn operator" id="subtract" >
+            -
+          </button>
+          <button className="btn" id="one">1</button>
+          <button className="btn" id="two">2</button>
+          <button className="btn" id="three">3</button>
+          <button className="btn operator" id="multiply" >
+            *
+          </button>
+
+          <button className="btn" id="zero">0</button>
+
+          <button className="btn" id="decimal">.</button>
+
+          <button className="btn calculate" id="equals">
+            =
+          </button>
+          <button className="btn operator" id="divide" >
+            /
+          </button>
         </div>
       </div>
-    )
+    );
   }
 }
 
