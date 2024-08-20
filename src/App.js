@@ -6,6 +6,40 @@ class Calculator extends React.Component {
     super(props);
   }
 
+  handleUserInputs = () => {
+    const keys = document.querySelectorAll('#calculator button');
+    var operators = ['+', '-', '*', '/'];
+    var decimalUsed = false;
+
+    for (let i = 0; i < keys.length; i++) {
+      keys[i].onclick(function (e) {
+        let displayScreen = document.querySelector(".screen");
+        let valueInScreen = displayScreen.innerHTML;
+        let btnValue = this.innerHTML;
+
+        if (btnValue == "Clear") {
+          displayScreen.innerHTML = "";
+          decimalUsed = false;
+        }
+
+        else if(btnValue == "="){
+            var equation = valueInScreen;
+            var lastValue = equation[equation.length - 1];
+            // If it's an operator or a decimal, remove it
+            if(operators.indexOf(lastValue) > -1 || lastValue == '.'){
+              equation.replace(/.$/, '');
+            }
+
+            if(equation){
+              displayScreen.innerHTML = eval(equation);
+            }
+
+            decimalUsed = false;
+        }
+      });
+    }
+  }
+
   render() {
     return (
       <div id="calculator">
