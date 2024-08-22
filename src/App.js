@@ -1,125 +1,148 @@
 import React from "react";
-import $ from "jquery";
 import "./App.css";
-
 
 class Calculator extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      values: "",
+      operators: ["+", "-", "*", "/"],
+      isDecimalUsed: false,
+      evaluated: false,
+    };
+    this.handleClick = this.handleClick.bind(this);
   }
 
-  componentDidMount() {
-    const keys = document.querySelectorAll("#calculator button");
-    console.log(keys);
-    
-    var operators = ["+", "-", "*", "/"];
-    // eslint-disable-next-line
-    var decimalUsed = false;
-    var evaluated = false;
-
-    for (let i = 0; i < keys.length; i++) {   
-      // eslint-disable-next-line   
-      $(keys[i]).on('click', function (e) {
-        let displayScreen = document.querySelector(".screen");
-        if(evaluated){
-          displayScreen.innerHTML = "";
-          evaluated = false;
-        }
-        let valueInScreen = displayScreen.innerHTML;
-        let btnValue = this.innerHTML;
-                
-        if (btnValue === "Clear") {
-          displayScreen.innerHTML = "0";
-          decimalUsed = false;
-        } else if (btnValue === "=") {
-          var equation = valueInScreen;
-          var lastValue = equation[equation.length - 1];
-          // If it's an operator or a decimal, remove it
-          if (operators.indexOf(lastValue) > -1 || lastValue === ".") {
-            equation.replace(/.$/, "");
-          }
-
-          if (equation) {
-            displayScreen.innerHTML = eval(equation).toFixed(4);
-          }
-
-          decimalUsed = false;
-          evaluated = true;
-        }
-        else if(btnValue === '.') {
-          if(!decimalUsed) {
-            displayScreen.innerHTML += btnValue;
-            decimalUsed = true;
-          }
-        }else {
-          displayScreen.innerHTML += btnValue;
-        }
-        e.preventDefault();
-      });
+  handleClick = (e) => {
+    e.preventDefault();
+    const btnValue = e.target.innerText;
+    if (this.state.evaluated) {
+      this.setState({ values: "", evaluated: false });
     }
-  }
+
+    if (btnValue === "Clear") {
+      this.setState({ values: "", isDecimalUsed: false });
+    } else if (btnValue === "=") {
+      var equation = this.state.values;
+      var lastValue = equation[equation.length - 1];
+      // If it's an operator or a decimal, remove it
+      if (this.state.operators.indexOf(lastValue) > -1 || lastValue === ".") {
+        equation.replace(/.$/, "");
+      }
+
+      if (equation) {
+        this.setState({
+          values: +eval(equation).toFixed(4),
+          isDecimalUsed: false,
+          evaluated: true,
+        });
+      }
+    } else if (btnValue === ".") {
+      if (!this.state.isDecimalUsed) {
+        this.setState((prev) => ({
+          values: (prev.values += btnValue),
+          isDecimalUsed: true,
+        }));
+      }
+    } else if (btnValue === "0") {
+      let ifValueIsAlreadyZero =
+        this.state.values.slice(-1) === '0' && this.state.values.length === 1;
+      if (!ifValueIsAlreadyZero) {
+        this.setState((prev) => ({
+          values: (prev.values += btnValue),
+        }));
+      }
+    } else {
+      this.setState((prev) => ({
+        values: (prev.values += btnValue),
+      }));
+
+      // if new value is new operator so, decimal value can be used again
+      if(this.state.operators.indexOf(btnValue) > -1){
+        this.setState({isDecimalUsed: false});
+      }
+    }
+  };
 
   render() {
     return (
       <div id="calculator">
         {/* Display component */}
         <div id="display">
-          <button className="btn" id="clear">
+          <button onClick={this.handleClick} className="btn" id="clear">
             Clear
           </button>
-          <div className="screen">0</div>
+          <div className="screen">
+            {this.state.values === "" ? 0 : this.state.values}
+          </div>
         </div>
         {/* Inputs component */}
         <div id="input-container">
-          <button className="btn" id="seven">
+          <button onClick={this.handleClick} className="btn" id="seven">
             7
           </button>
-          <button className="btn" id="eight">
+          <button onClick={this.handleClick} className="btn" id="eight">
             8
           </button>
-          <button className="btn" id="nine">
+          <button onClick={this.handleClick} className="btn" id="nine">
             9
           </button>
-          <button className="btn operator" id="add">
+          <button onClick={this.handleClick} className="btn operator" id="add">
             +
           </button>
-          <button className="btn" id="four">
+          <button onClick={this.handleClick} className="btn" id="four">
             4
           </button>
-          <button className="btn" id="five">
+          <button onClick={this.handleClick} className="btn" id="five">
             5
           </button>
-          <button className="btn" id="six">
+          <button onClick={this.handleClick} className="btn" id="six">
             6
           </button>
-          <button className="btn operator" id="subtract">
+          <button
+            onClick={this.handleClick}
+            className="btn operator"
+            id="subtract"
+          >
             -
           </button>
-          <button className="btn" id="one">
+          <button onClick={this.handleClick} className="btn" id="one">
             1
           </button>
-          <button className="btn" id="two">
+          <button onClick={this.handleClick} className="btn" id="two">
             2
           </button>
-          <button className="btn" id="three">
+          <button onClick={this.handleClick} className="btn" id="three">
             3
           </button>
-          <button className="btn operator" id="multiply">
+          <button
+            onClick={this.handleClick}
+            className="btn operator"
+            id="multiply"
+          >
             *
           </button>
 
-          <button className="btn" id="zero">
+          <button onClick={this.handleClick} className="btn" id="zero">
             0
           </button>
 
-          <button className="btn" id="decimal">
+          <button onClick={this.handleClick} className="btn" id="decimal">
             .
           </button>
 
-          <button className="btn calculate" id="equals">
+          <button
+            onClick={this.handleClick}
+            className="btn calculate"
+            id="equals"
+          >
             =
           </button>
-          <button className="btn operator" id="divide">
+          <button
+            onClick={this.handleClick}
+            className="btn operator"
+            id="divide"
+          >
             /
           </button>
         </div>
