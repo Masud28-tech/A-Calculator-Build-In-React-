@@ -11,6 +11,11 @@ class Calculator extends React.Component {
       evaluated: false,
     };
     this.handleClick = this.handleClick.bind(this);
+    this.isOperator = this.isOperator.bind(this);
+  }
+
+  isOperator(value) {
+    return this.state.operators.some((item) => item === value);
   }
 
   handleClick = (e) => {
@@ -26,7 +31,7 @@ class Calculator extends React.Component {
       var equation = this.state.values;
       var lastValue = equation[equation.length - 1];
       // If it's an operator or a decimal, remove it
-      if (this.state.operators.indexOf(lastValue) > -1 || lastValue === ".") {
+      if (this.isOperator(lastValue) || lastValue === ".") {
         equation.replace(/.$/, "");
       }
 
@@ -46,8 +51,22 @@ class Calculator extends React.Component {
       }
     } else if (btnValue === "0") {
       let ifValueIsAlreadyZero =
-        this.state.values.slice(-1) === '0' && this.state.values.length === 1;
+        this.state.values.slice(-1) === "0" && this.state.values.length === 1;
       if (!ifValueIsAlreadyZero) {
+        this.setState((prev) => ({
+          values: (prev.values += btnValue),
+        }));
+      }
+    } else if (this.isOperator(btnValue)) {
+      const lastValue = this.state.values.slice(-1);
+      if(this.isOperator(lastValue)){
+        if(btnValue == '-'){
+          this.setState((prev) => ({
+            values: (prev.values += btnValue),
+          }));
+        }
+
+      }else{
         this.setState((prev) => ({
           values: (prev.values += btnValue),
         }));
@@ -56,11 +75,6 @@ class Calculator extends React.Component {
       this.setState((prev) => ({
         values: (prev.values += btnValue),
       }));
-
-      // if new value is new operator so, decimal value can be used again
-      if(this.state.operators.indexOf(btnValue) > -1){
-        this.setState({isDecimalUsed: false});
-      }
     }
   };
 
