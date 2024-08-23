@@ -20,61 +20,74 @@ class Calculator extends React.Component {
 
   handleClick = (e) => {
     e.preventDefault();
-    const btnValue = e.target.innerText;
+
     if (this.state.evaluated) {
       this.setState({ values: "", evaluated: false });
     }
 
-    if (btnValue === "Clear") {
-      this.setState({ values: "", isDecimalUsed: false });
-    } else if (btnValue === "=") {
-      var equation = this.state.values;
-      var lastValue = equation[equation.length - 1];
-      // If it's an operator or a decimal, remove it
-      if (this.isOperator(lastValue) || lastValue === ".") {
-        equation.replace(/.$/, "");
-      }
+    const btnValue = e.target.innerText;
+    switch (btnValue) {
+      case "Clear":
+        this.setState({ values: "", isDecimalUsed: false });
+        break;
+      case "=":
+        var equation = this.state.values;
+        var lastValue = equation[equation.length - 1];
+        // If it's an operator or a decimal, remove it
+        if (this.isOperator(lastValue) || lastValue === ".") {
+          equation.replace(/.$/, "");
+        }
 
-      if (equation) {
-        this.setState({
-          values: +eval(equation).toFixed(4),
-          isDecimalUsed: false,
-          evaluated: true,
-        });
-      }
-    } else if (btnValue === ".") {
-      if (!this.state.isDecimalUsed) {
-        this.setState((prev) => ({
-          values: (prev.values += btnValue),
-          isDecimalUsed: true,
-        }));
-      }
-    } else if (btnValue === "0") {
-      let ifValueIsAlreadyZero =
-        this.state.values.slice(-1) === "0" && this.state.values.length === 1;
-      if (!ifValueIsAlreadyZero) {
-        this.setState((prev) => ({
-          values: (prev.values += btnValue),
-        }));
-      }
-    } else if (this.isOperator(btnValue)) {
-      const lastValue = this.state.values.slice(-1);
-      if(this.isOperator(lastValue)){
-        if(btnValue == '-'){
+        if (equation) {
+          this.setState({
+            values: +eval(equation).toFixed(4),
+            isDecimalUsed: false,
+            evaluated: true,
+          });
+        }
+        break;
+      case ".":
+        if (!this.state.isDecimalUsed) {
+          this.setState((prev) => ({
+            values: (prev.values += btnValue),
+            isDecimalUsed: true,
+          }));
+        }
+        break;
+      case "0":
+        let ifValueIsAlreadyZero =
+          this.state.values.slice(-1) === "0" && this.state.values.length === 1;
+        if (!ifValueIsAlreadyZero) {
           this.setState((prev) => ({
             values: (prev.values += btnValue),
           }));
         }
-
-      }else{
-        this.setState((prev) => ({
-          values: (prev.values += btnValue),
-        }));
-      }
-    } else {
-      this.setState((prev) => ({
-        values: (prev.values += btnValue),
-      }));
+        break;
+      default:
+        if (this.isOperator(btnValue)) {
+          if (btnValue === "-") {
+            this.setState((prev) => ({
+              values: (prev.values += btnValue),
+            }));
+          } else {
+            let str = this.state.values;
+            while (this.isOperator(str.charAt(str.length - 1))) {
+              str = str.slice(0, str.length - 1);
+            }
+            this.setState({
+              values: str + btnValue,
+              isDecimalUsed: false,
+            });
+          }
+          // now decimal value can be used again
+          this.setState({
+            isDecimalUsed: false,
+          });
+        } else {
+          this.setState((prev) => ({
+            values: (prev.values += btnValue),
+          }));
+        }
     }
   };
 
